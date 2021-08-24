@@ -12,12 +12,9 @@ import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding : ActivityMainBinding by lazy{
+    private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-
-    val state = Environment.getExternalStorageState()
-    val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         setListeners()
     }
 
-    private fun setListeners(){
+    private fun setListeners() {
         binding.btnRead.setOnClickListener {
             btnReadClick()
         }
@@ -37,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun btnReadClick() {
         val type = binding.rgType.checkedRadioButtonId
-        when(type){
+        when (type) {
             R.id.rbInternal -> loadFromInternal()
             R.id.rbExternalPriv -> loadFromExternal(true)
             R.id.rbExternalPub -> loadFromExternal(false)
@@ -46,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun btnSaveClick() {
         val type = binding.rgType.checkedRadioButtonId
-        when(type){
+        when (type) {
             R.id.rbInternal -> saveToInternal()
             R.id.rbExternalPriv -> saveToExternal(true)
             R.id.rbExternalPub -> saveToExternal(false)
@@ -55,9 +52,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveToInternal() {
         try {
-            val fos = openFileOutput("arquivo.txt",Context.MODE_PRIVATE)
+            val fos = openFileOutput("arquivo.txt", Context.MODE_PRIVATE)
             save(fos)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.e("NGVL", "Erro ao salvar o arquivo", e)
         }
     }
@@ -66,23 +63,41 @@ class MainActivity : AppCompatActivity() {
         try {
             val fis = openFileInput("arquivo.txt")
             load(fis)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Log.e("NGVL", "Erro ao carregar o arquivo", e)
         }
     }
 
     private fun saveToExternal(privateDir: Boolean) {
-        TODO("Not yet implemented")
+        val state = Environment.getExternalStorageState()
+        if(Environment.MEDIA_MOUNTED == state){
+            val myDir = getExternalDir(privateDir)
+            try {
+                if(myDir?.exists() == false){
+                    myDir.mkdir()
+                }
+                val txtFile = File(myDir, "arquivo.txt")
+                if(!txtFile.exists()){
+                    txtFile.createNewFile()
+                }
+                val fos = FileOutputStream(txtFile)
+                save(fos)
+            }catch (e: IOException){
+                Log.e("NGVL", "Erro ao salvar o arquivo", e)
+            }
+        }else{
+            Log.e("NGVL", "Não é ´pssível escrever no SD Card")
+        }
     }
 
     private fun loadFromExternal(privateDir: Boolean) {
         TODO("Not yet implemented")
     }
 
-    private fun save(fos: FileOutputStream){
+    private fun save(fos: FileOutputStream) {
         val lines = TextUtils.split(binding.edtText.text.toString(), "\n")
         val writer = PrintWriter(fos)
-        for(line in lines){
+        for (line in lines) {
             writer.println(line)
         }
         writer.flush()
@@ -90,16 +105,20 @@ class MainActivity : AppCompatActivity() {
         fos.close()
     }
 
-    private fun load(fis: FileInputStream){
+    private fun load(fis: FileInputStream) {
         val reader = BufferedReader(InputStreamReader(fis))
         val sb = StringBuilder()
-        do{
+        do {
             val line = reader.readLine() ?: break
-            if(sb.isNotEmpty()) sb.append('\n')
+            if (sb.isNotEmpty()) sb.append('\n')
             sb.append(line)
-        }while (true)
+        } while (true)
         reader.close()
         fis.close()
         binding.txtText.text = sb.toString()
     }
+
+    private fun getExternalDir(privateDir: Boolean) =
+        if (privateDir) getExternalFilesDir(null)
+        else Environment.getExternalStorageDirectory()
 }
