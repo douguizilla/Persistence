@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Persistence</string>
+    <string name="memoria_interna">Memória Interna</string>
+    <string name="memoria_externa_priv">Memória Externa Privada</string>
+    <string name="memoria_externa_pub">Memória Externa Pública</string>
+    <string name="salvar_label">Salvar</string>
+    <string name="ler_label">Ler</string>
 </resources>
