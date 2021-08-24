@@ -42,4 +42,20 @@ class MainActivity : AppCompatActivity() {
             R.id.rbExternalPub -> saveToExternal(false)
         }
     }
+
+    private fun saveToExternal(privateDir: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    private fun saveToInternal() {
+        TODO("Not yet implemented")
+    }
+
+    private fun loadFromExternal(privateDir: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    private fun loadFromInternal() {
+        TODO("Not yet implemented")
+    }
 }
