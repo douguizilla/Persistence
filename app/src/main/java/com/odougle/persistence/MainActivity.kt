@@ -2,7 +2,10 @@ package com.odougle.persistence
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import com.odougle.persistence.databinding.ActivityMainBinding
+import java.io.*
+import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,5 +60,29 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadFromInternal() {
         TODO("Not yet implemented")
+    }
+
+    private fun save(fos: FileOutputStream){
+        val lines = TextUtils.split(binding.edtText.text.toString(), "\n")
+        val writer = PrintWriter(fos)
+        for(line in lines){
+            writer.println(line)
+        }
+        writer.flush()
+        writer.close()
+        fos.close()
+    }
+
+    private fun load(fis: FileInputStream){
+        val reader = BufferedReader(InputStreamReader(fis))
+        val sb = StringBuilder()
+        do{
+            val line = reader.readLine() ?: break
+            if(sb.isNotEmpty()) sb.append('\n')
+            sb.append(line)
+        }while (true)
+        reader.close()
+        fis.close()
+        binding.txtText.text = sb.toString()
     }
 }
