@@ -57,15 +57,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadFromInternal() {
+        try {
+            val fis = openFileInput("arquivo.txt")
+            load(fis)
+        }catch (e: Exception){
+            Log.e("NGVL", "Erro ao carregar o arquivo", e)
+        }
+    }
+
     private fun saveToExternal(privateDir: Boolean) {
         TODO("Not yet implemented")
     }
 
     private fun loadFromExternal(privateDir: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    private fun loadFromInternal() {
         TODO("Not yet implemented")
     }
 
