@@ -3,6 +3,7 @@ package com.odougle.persistence
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
 import com.odougle.persistence.databinding.ActivityMainBinding
@@ -14,6 +15,10 @@ class MainActivity : AppCompatActivity() {
     private val binding : ActivityMainBinding by lazy{
         ActivityMainBinding.inflate(layoutInflater)
     }
+
+    val state = Environment.getExternalStorageState()
+    val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
