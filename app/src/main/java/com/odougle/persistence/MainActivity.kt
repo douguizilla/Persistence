@@ -26,10 +26,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun btnReadClick() {
-        TODO("Not yet implemented")
+        val type = binding.rgType.checkedRadioButtonId
+        when(type){
+            R.id.rbInternal -> loadFromInternal()
+            R.id.rbExternalPriv -> loadFromExternal(true)
+            R.id.rbExternalPub -> loadFromExternal(false)
+        }
     }
 
     private fun btnSaveClick() {
-        TODO("Not yet implemented")
+        val type = binding.rgType.checkedRadioButtonId
+        when(type){
+            R.id.rbInternal -> saveToInternal()
+            R.id.rbExternalPriv -> saveToExternal(true)
+            R.id.rbExternalPub -> saveToExternal(false)
+        }
     }
 }
