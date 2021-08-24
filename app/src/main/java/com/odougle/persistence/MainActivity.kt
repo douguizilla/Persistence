@@ -1,11 +1,14 @@
 package com.odougle.persistence
 
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import com.odougle.persistence.databinding.ActivityMainBinding
 import java.io.*
 import java.lang.StringBuilder
@@ -138,4 +141,39 @@ class MainActivity : AppCompatActivity() {
     private fun getExternalDir(privateDir: Boolean) =
         if (privateDir) getExternalFilesDir(null)
         else Environment.getExternalStorageDirectory()
+
+    private fun checkStoragePermission(
+        permission: String,
+        requestCode: Int
+    ): Boolean{
+        if(ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,permission)){
+                Toast.makeText(this,R.string.message_permission_requested, Toast.LENGTH_SHORT).show()
+            }
+            ActivityCompat.requestPermissions(this, arrayOf(permission),requestCode)
+            return false
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            RC_STORAGE_PERMISSION -> {
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this,R.string.message_permission_granted, Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(this,R.string.message_permission_denied, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    companion object{
+        const val RC_STORAGE_PERMISSION = 0
+    }
 }
