@@ -72,6 +72,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveToExternal(privateDir: Boolean) {
+
+        val hasPermission = checkStoragePermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, RC_STORAGE_PERMISSION)
+        if(!hasPermission){
+            return
+        }
+
         val state = Environment.getExternalStorageState()
         if (Environment.MEDIA_MOUNTED == state) {
             val myDir = getExternalDir(privateDir)
@@ -94,6 +100,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFromExternal(privateDir: Boolean) {
+
+        val hasPermission = checkStoragePermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, RC_STORAGE_PERMISSION)
+        if(!hasPermission){
+            return
+        }
+
         val state = Environment.getExternalStorageState()
         if (Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state) {
             val myDir = getExternalDir(privateDir)
