@@ -70,28 +70,45 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveToExternal(privateDir: Boolean) {
         val state = Environment.getExternalStorageState()
-        if(Environment.MEDIA_MOUNTED == state){
+        if (Environment.MEDIA_MOUNTED == state) {
             val myDir = getExternalDir(privateDir)
             try {
-                if(myDir?.exists() == false){
+                if (myDir?.exists() == false) {
                     myDir.mkdir()
                 }
                 val txtFile = File(myDir, "arquivo.txt")
-                if(!txtFile.exists()){
+                if (!txtFile.exists()) {
                     txtFile.createNewFile()
                 }
                 val fos = FileOutputStream(txtFile)
                 save(fos)
-            }catch (e: IOException){
+            } catch (e: IOException) {
                 Log.e("NGVL", "Erro ao salvar o arquivo", e)
             }
-        }else{
-            Log.e("NGVL", "Não é ´pssível escrever no SD Card")
+        } else {
+            Log.e("NGVL", "Não é possível escrever no SD Card")
         }
     }
 
     private fun loadFromExternal(privateDir: Boolean) {
-        TODO("Not yet implemented")
+        val state = Environment.getExternalStorageState()
+        if (Environment.MEDIA_MOUNTED == state || Environment.MEDIA_MOUNTED_READ_ONLY == state) {
+            val myDir = getExternalDir(privateDir)
+            if (myDir?.exists() == true) {
+                val txtFile = File(myDir, "arquivo.txt")
+                if (txtFile.exists()) {
+                    try {
+                        txtFile.createNewFile()
+                        val fis = FileInputStream(txtFile)
+                        load(fis)
+                    } catch (e: IOException) {
+                        Log.e("NGVL", "Erro ao carregar o arquivo", e)
+                    }
+                }
+            }
+        } else {
+            Log.e("NGVL", "SD card indisponivel")
+        }
     }
 
     private fun save(fos: FileOutputStream) {
