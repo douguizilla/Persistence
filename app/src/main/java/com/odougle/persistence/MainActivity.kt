@@ -1,8 +1,10 @@
 package com.odougle.persistence
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import com.odougle.persistence.databinding.ActivityMainBinding
 import java.io.*
 import java.lang.StringBuilder
@@ -46,11 +48,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveToExternal(privateDir: Boolean) {
-        TODO("Not yet implemented")
+    private fun saveToInternal() {
+        try {
+            val fos = openFileOutput("arquivo.txt",Context.MODE_PRIVATE)
+            save(fos)
+        }catch (e: Exception){
+            Log.e("NGVL", "Erro ao salvar o arquivo", e)
+        }
     }
 
-    private fun saveToInternal() {
+    private fun saveToExternal(privateDir: Boolean) {
         TODO("Not yet implemented")
     }
 
