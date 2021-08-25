@@ -1,6 +1,7 @@
 package com.odougle.persistence
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.preference.PreferenceManager
 import com.odougle.persistence.databinding.ActivityMainBinding
 import java.io.*
 import java.lang.StringBuilder
@@ -33,6 +35,42 @@ class MainActivity : AppCompatActivity() {
             btnSaveClick()
         }
 
+        binding.btnOpenPref.setOnClickListener {
+            startActivity(Intent(this, ConfigActivity::class.java))
+        }
+
+        binding.btnReadPref.setOnClickListener {
+            readPrefs()
+        }
+
+
+    }
+
+    private fun readPrefs() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val city = prefs.getString(
+            getString(R.string.pref_city),
+            getString(R.string.pref_city_default)
+        )
+
+        val socialNetworks = prefs.getString(
+            getString(R.string.pref_social_network),
+            getString(R.string.pref_social_network_default)
+        )
+
+        val messages = prefs.getBoolean(
+            getString(R.string.pref_messages),
+            false
+        )
+
+        val msg = String.format(
+            "%s = %s\n%s = %s\n%s = %s",
+            getString(R.string.title_city),
+            city,
+            getString(R.string.title_social_network), socialNetworks,
+            getString(R.string.title_messages), messages.toString()
+        )
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
     private fun btnReadClick() {
@@ -73,8 +111,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveToExternal(privateDir: Boolean) {
 
-        val hasPermission = checkStoragePermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, RC_STORAGE_PERMISSION)
-        if(!hasPermission){
+        val hasPermission = checkStoragePermission(
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            RC_STORAGE_PERMISSION
+        )
+        if (!hasPermission) {
             return
         }
 
@@ -101,8 +142,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadFromExternal(privateDir: Boolean) {
 
-        val hasPermission = checkStoragePermission(android.Manifest.permission.READ_EXTERNAL_STORAGE, RC_STORAGE_PERMISSION)
-        if(!hasPermission){
+        val hasPermission = checkStoragePermission(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            RC_STORAGE_PERMISSION
+        )
+        if (!hasPermission) {
             return
         }
 
@@ -157,12 +201,17 @@ class MainActivity : AppCompatActivity() {
     private fun checkStoragePermission(
         permission: String,
         requestCode: Int
-    ): Boolean{
-        if(ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED){
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,permission)){
-                Toast.makeText(this,R.string.message_permission_requested, Toast.LENGTH_SHORT).show()
+    ): Boolean {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                Toast.makeText(this, R.string.message_permission_requested, Toast.LENGTH_SHORT)
+                    .show()
             }
-            ActivityCompat.requestPermissions(this, arrayOf(permission),requestCode)
+            ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
             return false
         }
         return true
@@ -174,18 +223,20 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode){
+        when (requestCode) {
             RC_STORAGE_PERMISSION -> {
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(this,R.string.message_permission_granted, Toast.LENGTH_SHORT).show()
-                }else{
-                    Toast.makeText(this,R.string.message_permission_denied, Toast.LENGTH_SHORT).show()
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, R.string.message_permission_granted, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(this, R.string.message_permission_denied, Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
     }
 
-    companion object{
+    companion object {
         const val RC_STORAGE_PERMISSION = 0
     }
 }
