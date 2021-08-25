@@ -16,5 +16,5 @@
         android:key="@string/pref_social_network"
         android:entries="@array/social_networks"
         android:entryValues="@array/social_networks_values"
-        android:defaultValue="@string/def_social_network_default"/>
+        android:defaultValue="@string/pref_social_network_default"/>
 </PreferenceScreen>
